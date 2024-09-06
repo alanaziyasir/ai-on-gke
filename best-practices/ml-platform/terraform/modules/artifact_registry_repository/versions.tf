@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#output "configsync_repository" {
-#  value = local.configsync_repository.html_url
-#}
+terraform {
+  required_version = ">= 1.5.7"
 
-output "git_repository" {
-  value = local.git_repository
-}
-
-output "iap_domain" {
-  value = local.iap_domain
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "5.38.0"
+    }
+  }
 }

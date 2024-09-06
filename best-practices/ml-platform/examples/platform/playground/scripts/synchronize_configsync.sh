@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,15 +13,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+SCRIPT_PATH="$(
+    cd "$(dirname "$0")" >/dev/null 2>&1
+    pwd -P
+)"
 
-#output "configsync_repository" {
-#  value = local.configsync_repository.html_url
-#}
+if [ -z ${GIT_REPOSITORY:-} ]; then
+    ${SCRIPT_PATH}/helpers/generate_oic_image.sh
 
-output "git_repository" {
-  value = local.git_repository
-}
+    LASTEST_SHA=$(crane digest ${CONFIGSYNC_IMAGE})
+    LAST_COMMIT=${LASTEST_SHA##sha256:}
+else
+    source ${SCRIPT_PATH}/helpers/clone_git_repo.sh
 
-output "iap_domain" {
-  value = local.iap_domain
-}
+    cd ${GIT_REPOSITORY_PATH}
+    commit_hash=$(git rev-parse HEAD)
+    LAST_COMMIT=${commit_hash}
+fi
+
+${SCRIPT_PATH}/helpers/wait_for_root_sync.sh ${LAST_COMMIT}
+${SCRIPT_PATH}/helpers/wait_for_repo_sync.sh ${LAST_COMMIT}

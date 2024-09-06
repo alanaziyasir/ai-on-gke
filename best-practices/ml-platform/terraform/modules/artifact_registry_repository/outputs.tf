@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,17 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-set -u
 
-SCRIPT_PATH="$(
-  cd "$(dirname "$0")" >/dev/null 2>&1
-  pwd -P
-)"
+output "http_clone_url" {
+  value = "${google_artifact_registry_repository.repository.location}-docker.pkg.dev/${google_artifact_registry_repository.repository.project}/${google_artifact_registry_repository.repository.name}"
+}
 
-source ${SCRIPT_PATH}/helpers/clone_git_repo.sh
+output "location" {
+  value = google_artifact_registry_repository.repository.location
+}
 
-cd ${GIT_REPOSITORY_PATH}
-commit_hash=$(git rev-parse HEAD)
+output "name" {
+  value = google_artifact_registry_repository.repository.name
+}
 
-${SCRIPT_PATH}/helpers/wait_for_repo_sync.sh ${commit_hash}
-${SCRIPT_PATH}/helpers/wait_for_root_sync.sh ${commit_hash}
+output "project" {
+  value = google_artifact_registry_repository.repository.project
+}
+
+output "repo" {
+  value = google_artifact_registry_repository.repository
+}

@@ -20,10 +20,11 @@ metadata:
   namespace: NAMESPACE
   annotations:
     configmanagement.gke.io/cluster-selector: ENV
+    configsync.gke.io/deletion-propagation-policy: Foreground
 spec:
-  sourceType: git
   # Since this is for a namespace repository, the format is unstructured
   sourceFormat: unstructured
+  sourceType: git
   git:
     repo: "GIT_REPO"
     revision: "main"

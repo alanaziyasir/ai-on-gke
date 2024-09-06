@@ -183,6 +183,7 @@ resource "google_container_cluster" "mlp" {
   monitoring_config {
     advanced_datapath_observability_config {
       enable_metrics = true
+      enable_relay   = true
     }
 
     enable_components = [

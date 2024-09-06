@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,15 +13,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+SCRIPT_PATH="$(
+    cd "$(dirname "$0")" >/dev/null 2>&1
+    pwd -P
+)"
 
-#output "configsync_repository" {
-#  value = local.configsync_repository.html_url
-#}
-
-output "git_repository" {
-  value = local.git_repository
-}
-
-output "iap_domain" {
-  value = local.iap_domain
-}
+if [ -z ${GIT_REPOSITORY:-} ]; then
+    cd ${MANIFESTS_DIRECTORY}
+    crane append -f <(tar -f - -c *) -t ${CONFIGSYNC_IMAGE}
+fi
